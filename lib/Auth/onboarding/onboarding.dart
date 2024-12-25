@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:neh/Auth/login.dart';
+import 'package:neh/Auth/register.dart'; // Import RegisterPage
 
 class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({super.key});
@@ -15,95 +16,99 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              children: <Widget>[
-                Expanded(
-                  child: PageView(
-                    controller: _pageController,
-                    onPageChanged: (int page) {
-                      setState(() {
-                        _currentPage = page;
-                      });
-                    },
-                    children: <Widget>[
-                      OnboardingContent(
-                        image: 'assets/versee.jpg',
-                        title: 'Daily Bible Verses',
-                        description:
-                            'Receive daily Bible verses and short devotions to inspire your faith.',
-                      ),
-                      OnboardingContent(
-                        image: 'assets/pr.jpg',
-                        title: 'Prayer Requests',
-                        description:
-                            'Submit your prayer requests and join in communal prayers.',
-                      ),
-                      OnboardingContent(
-                        image: 'assets/cal.jpeg',
-                        title: 'Church Event Calendar',
-                        description:
-                            'Stay updated with upcoming church events and services.',
-                      ),
-                      OnboardingContent(
-                        image: 'assets/chuu.jpg',
-                        title: 'Sermon Recordings',
-                        description:
-                            'Access recorded sermons to deepen your understanding of the Word.',
-                      ),
-                    ],
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          children: <Widget>[
+            Expanded(
+              child: PageView(
+                controller: _pageController,
+                onPageChanged: (int page) {
+                  setState(() {
+                    _currentPage = page;
+                  });
+                },
+                children: <Widget>[
+                  OnboardingContent(
+                    image: 'assets/versee.jpg',
+                    title: 'Daily Bible Verses',
+                    description:
+                        'Receive daily Bible verses and short devotions to inspire your faith.',
                   ),
+                  OnboardingContent(
+                    image: 'assets/pr.jpg',
+                    title: 'Prayer Requests',
+                    description:
+                        'Submit your prayer requests and join in communal prayers.',
+                  ),
+                  OnboardingContent(
+                    image: 'assets/cal.jpeg',
+                    title: 'Church Event Calendar',
+                    description:
+                        'Stay updated with upcoming church events and services.',
+                  ),
+                  OnboardingContent(
+                    image: 'assets/chuu.jpg',
+                    title: 'Sermon Recordings',
+                    description:
+                        'Access recorded sermons to deepen your understanding of the Word.',
+                  ),
+                ],
+              ),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                TextButton(
+                  onPressed: () {
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              RegisterPage()), // Go to RegisterPage
+                    );
+                  },
+                  child: Text('Skip'),
                 ),
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    TextButton(
-                      onPressed: () {
-                        Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => LoginPage(
-                                      dataList: null,
-                                    ))); // Navigate to Login Page
-                      },
-                      child: Text('Skip'),
-                    ),
-                    Row(
-                      children: List.generate(4, (index) {
-                        return Container(
-                          margin: EdgeInsets.symmetric(horizontal: 5.0),
-                          width: _currentPage == index ? 12.0 : 8.0,
-                          height: _currentPage == index ? 12.0 : 8.0,
-                          decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: _currentPage == index
-                                  ? Colors.blue
-                                  : Colors.grey),
-                        );
-                      }),
-                    ),
-                    TextButton(
-                      onPressed: () {
-                        if (_currentPage == 3) {
-                          Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => LoginPage(
-                                        dataList: null,
-                                      ))); // Navigate to Login Page
-                        } else {
-                          _pageController.nextPage(
-                              duration: Duration(milliseconds: 300),
-                              curve: Curves.ease);
-                        }
-                      },
-                      child: Text('Next'),
-                    )
-                  ],
-                )
+                  children: List.generate(4, (index) {
+                    return Container(
+                      margin: EdgeInsets.symmetric(horizontal: 5.0),
+                      width: _currentPage == index ? 12.0 : 8.0,
+                      height: _currentPage == index ? 12.0 : 8.0,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color:
+                            _currentPage == index ? Colors.blue : Colors.grey,
+                      ),
+                    );
+                  }),
+                ),
+                TextButton(
+                  onPressed: () {
+                    if (_currentPage == 3) {
+                      // Last onboarding page
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                RegisterPage()), // Go to RegisterPage
+                      );
+                    } else {
+                      _pageController.nextPage(
+                        duration: Duration(milliseconds: 300),
+                        curve: Curves.ease,
+                      );
+                    }
+                  },
+                  child: Text('Next'),
+                ),
               ],
-            )));
+            )
+          ],
+        ),
+      ),
+    );
   }
 }
 
@@ -122,20 +127,20 @@ class OnboardingContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          SizedBox(
-            width: 300, // Set a fixed width
-            height: 280, // Set a fixed height
-            child: Image.asset(image,
-                fit: BoxFit.cover), // Ensure the image covers the container
-          ),
-          SizedBox(height: 10.50),
-          Text(title,
-              style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold)),
-          SizedBox(height: 10.0),
-          Text(description,
-              textAlign: TextAlign.center, style: TextStyle(fontSize: 10.0)),
-        ]);
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        SizedBox(
+          width: 300,
+          height: 280,
+          child: Image.asset(image, fit: BoxFit.cover),
+        ),
+        SizedBox(height: 10.50),
+        Text(title,
+            style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold)),
+        SizedBox(height: 10.0),
+        Text(description,
+            textAlign: TextAlign.center, style: TextStyle(fontSize: 10.0)),
+      ],
+    );
   }
 }

@@ -13,301 +13,301 @@ import 'package:neh/models/personModel.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-class ChurchEventsApp extends StatefulWidget {
-  const ChurchEventsApp({super.key});
+// class ChurchEventsApp extends StatefulWidget {
+//   const ChurchEventsApp({super.key});
 
-  @override
-  _ChurchEventsAppState createState() => _ChurchEventsAppState();
-}
+//   @override
+//   _ChurchEventsAppState createState() => _ChurchEventsAppState();
+// }
 
-class _ChurchEventsAppState extends State<ChurchEventsApp> {
-  List<Map<String, String>> _submittedEvents = [];
+// class _ChurchEventsAppState extends State<ChurchEventsApp> {
+//   List<Map<String, String>> _submittedEvents = [];
 
-  @override
-  void initState() {
-    super.initState();
-    fetchEvents();
-  }
+//   @override
+//   void initState() {
+//     super.initState();
+//     fetchEvents();
+//   }
 
-  Future<void> fetchEvents() async {
-    try {
-      final events = await fetchEventsFromDatabase();
-      setState(() {
-        _submittedEvents = events;
-      });
-    } catch (e) {
-      print("Error fetching events: $e");
-    }
-  }
+//   Future<void> fetchEvents() async {
+//     try {
+//       final events = await fetchEventsFromDatabase();
+//       setState(() {
+//         _submittedEvents = events;
+//       });
+//     } catch (e) {
+//       print("Error fetching events: $e");
+//     }
+//   }
 
-  Future<void> addEvent(Map<String, String> eventData) async {
-    await addEventToDatabase(eventData);
-    await fetchEvents(); // Refresh the list after adding an event
-  }
+//   Future<void> addEvent(Map<String, String> eventData) async {
+//     await addEventToDatabase(eventData);
+//     await fetchEvents(); // Refresh the list after adding an event
+//   }
 
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      home: ChurchEventsPage(
-        submittedEvents: _submittedEvents,
-        addEvent: addEvent,
-      ),
-    );
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     return MaterialApp(
+//       home: ChurchEventsPage(
+//         submittedEvents: _submittedEvents,
+//         addEvent: addEvent,
+//       ),
+//     );
+//   }
+// }
 
-class ChurchEventsPage extends StatelessWidget {
-  final List<Map<String, String>> submittedEvents;
-  final Function(Map<String, String>) addEvent;
+// class ChurchEventsPage extends StatelessWidget {
+//   final List<Map<String, String>> submittedEvents;
+//   final Function(Map<String, String>) addEvent;
 
-  const ChurchEventsPage(
-      {super.key, required this.submittedEvents, required this.addEvent});
+//   const ChurchEventsPage(
+//       {super.key, required this.submittedEvents, required this.addEvent});
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text('Church Events')),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            ElevatedButton(
-              onPressed: () {
-                // Navigate to the RequestChurchEventForm page to add events
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) =>
-                        RequestChurchEventForm(addEvent: addEvent),
-                  ),
-                );
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.blueAccent, // Button background color
-                padding: EdgeInsets.symmetric(horizontal: 40, vertical: 15),
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12)),
-              ),
-              child:
-                  Text('Request Church Event', style: TextStyle(fontSize: 16)),
-            ),
-            SizedBox(height: 20.0),
-            ElevatedButton(
-              onPressed: () {
-                // Navigate to the SearchChurchEventsPage to view submitted events
-                print("Navigating to SearchChurchEventsPage");
-                print("Submitted Events: $submittedEvents");
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       appBar: AppBar(title: Text('Church Events')),
+//       body: Padding(
+//         padding: const EdgeInsets.all(16.0),
+//         child: Column(
+//           mainAxisAlignment: MainAxisAlignment.center,
+//           children: <Widget>[
+//             ElevatedButton(
+//               onPressed: () {
+//                 // Navigate to the RequestChurchEventForm page to add events
+//                 Navigator.push(
+//                   context,
+//                   MaterialPageRoute(
+//                     builder: (context) =>
+//                         RequestChurchEventForm(addEvent: addEvent),
+//                   ),
+//                 );
+//               },
+//               style: ElevatedButton.styleFrom(
+//                 backgroundColor: Colors.blueAccent, // Button background color
+//                 padding: EdgeInsets.symmetric(horizontal: 40, vertical: 15),
+//                 shape: RoundedRectangleBorder(
+//                     borderRadius: BorderRadius.circular(12)),
+//               ),
+//               child:
+//                   Text('Request Church Event', style: TextStyle(fontSize: 16)),
+//             ),
+//             SizedBox(height: 20.0),
+//             ElevatedButton(
+//               onPressed: () {
+//                 // Navigate to the SearchChurchEventsPage to view submitted events
+//                 print("Navigating to SearchChurchEventsPage");
+//                 print("Submitted Events: $submittedEvents");
 
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => SearchChurchEventsPage(
-                        submittedEvents: submittedEvents),
-                  ),
-                );
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.green, // Button background color
-                padding: EdgeInsets.symmetric(horizontal: 40, vertical: 15),
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12)),
-              ),
-              child:
-                  Text('Search Church Events', style: TextStyle(fontSize: 16)),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
+//                 Navigator.push(
+//                   context,
+//                   MaterialPageRoute(
+//                     builder: (context) => SearchChurchEventsPage(
+//                         submittedEvents: submittedEvents),
+//                   ),
+//                 );
+//               },
+//               style: ElevatedButton.styleFrom(
+//                 backgroundColor: Colors.green, // Button background color
+//                 padding: EdgeInsets.symmetric(horizontal: 40, vertical: 15),
+//                 shape: RoundedRectangleBorder(
+//                     borderRadius: BorderRadius.circular(12)),
+//               ),
+//               child:
+//                   Text('Search Church Events', style: TextStyle(fontSize: 16)),
+//             ),
+//           ],
+//         ),
+//       ),
+//     );
+//   }
+// }
 
-class RequestChurchEventForm extends StatefulWidget {
-  final Function(Map<String, String>) addEvent;
+// class RequestChurchEventForm extends StatefulWidget {
+//   final Function(Map<String, String>) addEvent;
 
-  const RequestChurchEventForm({super.key, required this.addEvent});
+//   const RequestChurchEventForm({super.key, required this.addEvent});
 
-  @override
-  _RequestChurchEventFormState createState() => _RequestChurchEventFormState();
-}
+//   @override
+//   _RequestChurchEventFormState createState() => _RequestChurchEventFormState();
+// }
 
-class _RequestChurchEventFormState extends State<RequestChurchEventForm> {
-  final _formKey = GlobalKey<FormState>();
-  final TextEditingController _nameController = TextEditingController();
-  final TextEditingController _churchNameController = TextEditingController();
-  final TextEditingController _cityController = TextEditingController();
-  final TextEditingController _addressController = TextEditingController();
-  final TextEditingController _descriptionController = TextEditingController();
+// class _RequestChurchEventFormState extends State<RequestChurchEventForm> {
+//   final _formKey = GlobalKey<FormState>();
+//   final TextEditingController _nameController = TextEditingController();
+//   final TextEditingController _churchNameController = TextEditingController();
+//   final TextEditingController _cityController = TextEditingController();
+//   final TextEditingController _addressController = TextEditingController();
+//   final TextEditingController _descriptionController = TextEditingController();
 
-  ///////////////////////////
-  ///
-  ///
-  ///
-  ///
-  ///  final TextEditingController _churchNameController = TextEditingController();
-  final TextEditingController nameController = TextEditingController();
-  final TextEditingController emailController = TextEditingController();
-  final TextEditingController phoneController = TextEditingController();
-  final TextEditingController passController = TextEditingController();
+//   ///////////////////////////
+//   ///
+//   ///
+//   ///
+//   ///
+//   ///  final TextEditingController _churchNameController = TextEditingController();
+//   final TextEditingController nameController = TextEditingController();
+//   final TextEditingController emailController = TextEditingController();
+//   final TextEditingController phoneController = TextEditingController();
+//   final TextEditingController passController = TextEditingController();
 
-  void _submitForm() {
-    if (_formKey.currentState!.validate()) {
-      final eventData = {
-        'Name': _nameController.text,
-        'Church Name': _churchNameController.text,
-        'City': _cityController.text,
-        'Address': _addressController.text,
-        'Description': _descriptionController.text,
-      };
+//   void _submitForm() {
+//     if (_formKey.currentState!.validate()) {
+//       final eventData = {
+//         'Name': _nameController.text,
+//         'Church Name': _churchNameController.text,
+//         'City': _cityController.text,
+//         'Address': _addressController.text,
+//         'Description': _descriptionController.text,
+//       };
 
-      widget.addEvent(eventData);
+//       widget.addEvent(eventData);
 
-      // Show confirmation
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Event Request Submitted')),
-      );
+//       // Show confirmation
+//       ScaffoldMessenger.of(context).showSnackBar(
+//         SnackBar(content: Text('Event Request Submitted')),
+//       );
 
-      print("Event Submitted: $eventData");
+//       print("Event Submitted: $eventData");
 
-      // Clear form
-      _formKey.currentState!.reset();
+//       // Clear form
+//       _formKey.currentState!.reset();
 
-      Navigator.pop(context);
-    }
-  }
+//       Navigator.pop(context);
+//     }
+//   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text('Request Church Event')),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Form(
-          key: _formKey,
-          child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: <Widget>[
-                Container(
-                  width: 510,
-                  height: 60,
-                  child: ElevatedButton(
-                    onPressed: () async {
-                      if (_formKey.currentState!.validate()) {
-                        var personObject = Person(
-                          nameController.text.toString(),
-                          emailController.text.toString(),
-                          phoneController.text,
-                          passController.text.toString(),
-                        );
-                        await UserFunctions()
-                            .registerUser(context, personObject);
-                      }
-                    },
-                    child: Text(
-                      StringConstants.signup,
-                      style: TextStyle(color: Colors.black),
-                    ),
-                    style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all(
-                            Color.fromRGBO(27, 213, 210, 10)),
-                        shape:
-                            MaterialStateProperty.all<RoundedRectangleBorder>(
-                                RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(80.0),
-                        ))),
-                  ),
-                ),
-                TextFormField(
-                  controller: _nameController,
-                  decoration: InputDecoration(
-                    labelText: 'Your Name',
-                    filled: true,
-                    fillColor: Colors.lightBlue.shade50,
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                  ),
-                  validator: (value) =>
-                      value!.isEmpty ? 'Please enter your name' : null,
-                ),
-                SizedBox(height: 10.0),
-                TextFormField(
-                  controller: _churchNameController,
-                  decoration: InputDecoration(
-                    labelText: 'Church Name',
-                    filled: true,
-                    fillColor: Colors.lightBlue.shade50,
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                  ),
-                  validator: (value) =>
-                      value!.isEmpty ? 'Please enter church name' : null,
-                ),
-                SizedBox(height: 10.0),
-                TextFormField(
-                  controller: _cityController,
-                  decoration: InputDecoration(
-                    labelText: 'City',
-                    filled: true,
-                    fillColor: Colors.lightBlue.shade50,
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                  ),
-                  validator: (value) =>
-                      value!.isEmpty ? 'Please enter city' : null,
-                ),
-                SizedBox(height: 10.0),
-                TextFormField(
-                  controller: _addressController,
-                  decoration: InputDecoration(
-                    labelText: 'Address',
-                    filled: true,
-                    fillColor: Colors.lightBlue.shade50,
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                  ),
-                  validator: (value) =>
-                      value!.isEmpty ? 'Please enter address' : null,
-                ),
-                SizedBox(height: 10.0),
-                TextFormField(
-                  controller: _descriptionController,
-                  decoration: InputDecoration(
-                    labelText: 'Description',
-                    filled: true,
-                    fillColor: Colors.lightBlue.shade50,
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                  ),
-                  maxLines: 4,
-                  validator: (value) =>
-                      value!.isEmpty ? 'Please enter description' : null,
-                ),
-                SizedBox(height: 20.0),
-                ElevatedButton(
-                  onPressed: _submitForm,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blue, // Button color
-                    padding: EdgeInsets.symmetric(horizontal: 40, vertical: 15),
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12)),
-                  ),
-                  child: Text('Submit', style: TextStyle(fontSize: 16)),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       appBar: AppBar(title: Text('Request Church Event')),
+//       body: Padding(
+//         padding: const EdgeInsets.all(16.0),
+//         child: Form(
+//           key: _formKey,
+//           child: SingleChildScrollView(
+//             child: Column(
+//               crossAxisAlignment: CrossAxisAlignment.stretch,
+//               children: <Widget>[
+//                 Container(
+//                   width: 510,
+//                   height: 60,
+//                   child: ElevatedButton(
+//                     onPressed: () async {
+//                       if (_formKey.currentState!.validate()) {
+//                         var personObject = Person(
+//                           nameController.text.toString(),
+//                           emailController.text.toString(),
+//                           phoneController.text,
+//                           passController.text.toString(),
+//                         );
+//                         await UserFunctions()
+//                             .registerUser(context, personObject);
+//                       }
+//                     },
+//                     child: Text(
+//                       StringConstants.signup,
+//                       style: TextStyle(color: Colors.black),
+//                     ),
+//                     style: ButtonStyle(
+//                         backgroundColor: MaterialStateProperty.all(
+//                             Color.fromRGBO(27, 213, 210, 10)),
+//                         shape:
+//                             MaterialStateProperty.all<RoundedRectangleBorder>(
+//                                 RoundedRectangleBorder(
+//                           borderRadius: BorderRadius.circular(80.0),
+//                         ))),
+//                   ),
+//                 ),
+//                 TextFormField(
+//                   controller: _nameController,
+//                   decoration: InputDecoration(
+//                     labelText: 'Your Name',
+//                     filled: true,
+//                     fillColor: Colors.lightBlue.shade50,
+//                     border: OutlineInputBorder(
+//                       borderRadius: BorderRadius.circular(12),
+//                     ),
+//                   ),
+//                   validator: (value) =>
+//                       value!.isEmpty ? 'Please enter your name' : null,
+//                 ),
+//                 SizedBox(height: 10.0),
+//                 TextFormField(
+//                   controller: _churchNameController,
+//                   decoration: InputDecoration(
+//                     labelText: 'Church Name',
+//                     filled: true,
+//                     fillColor: Colors.lightBlue.shade50,
+//                     border: OutlineInputBorder(
+//                       borderRadius: BorderRadius.circular(12),
+//                     ),
+//                   ),
+//                   validator: (value) =>
+//                       value!.isEmpty ? 'Please enter church name' : null,
+//                 ),
+//                 SizedBox(height: 10.0),
+//                 TextFormField(
+//                   controller: _cityController,
+//                   decoration: InputDecoration(
+//                     labelText: 'City',
+//                     filled: true,
+//                     fillColor: Colors.lightBlue.shade50,
+//                     border: OutlineInputBorder(
+//                       borderRadius: BorderRadius.circular(12),
+//                     ),
+//                   ),
+//                   validator: (value) =>
+//                       value!.isEmpty ? 'Please enter city' : null,
+//                 ),
+//                 SizedBox(height: 10.0),
+//                 TextFormField(
+//                   controller: _addressController,
+//                   decoration: InputDecoration(
+//                     labelText: 'Address',
+//                     filled: true,
+//                     fillColor: Colors.lightBlue.shade50,
+//                     border: OutlineInputBorder(
+//                       borderRadius: BorderRadius.circular(12),
+//                     ),
+//                   ),
+//                   validator: (value) =>
+//                       value!.isEmpty ? 'Please enter address' : null,
+//                 ),
+//                 SizedBox(height: 10.0),
+//                 TextFormField(
+//                   controller: _descriptionController,
+//                   decoration: InputDecoration(
+//                     labelText: 'Description',
+//                     filled: true,
+//                     fillColor: Colors.lightBlue.shade50,
+//                     border: OutlineInputBorder(
+//                       borderRadius: BorderRadius.circular(12),
+//                     ),
+//                   ),
+//                   maxLines: 4,
+//                   validator: (value) =>
+//                       value!.isEmpty ? 'Please enter description' : null,
+//                 ),
+//                 SizedBox(height: 20.0),
+//                 ElevatedButton(
+//                   onPressed: _submitForm,
+//                   style: ElevatedButton.styleFrom(
+//                     backgroundColor: Colors.blue, // Button color
+//                     padding: EdgeInsets.symmetric(horizontal: 40, vertical: 15),
+//                     shape: RoundedRectangleBorder(
+//                         borderRadius: BorderRadius.circular(12)),
+//                   ),
+//                   child: Text('Submit', style: TextStyle(fontSize: 16)),
+//                 ),
+//               ],
+//             ),
+//           ),
+//         ),
+//       ),
+//     );
+//   }
+// }
 
 class BibleVersesPage extends StatefulWidget {
   const BibleVersesPage({super.key});
