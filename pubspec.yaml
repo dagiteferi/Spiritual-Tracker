@@ -38,17 +38,11 @@ dependencies:
   flutter:
     sdk: flutter
   url_launcher: ^6.1.8
-
-  font_awesome_flutter: ^10.4.0
-
-
-
   
-  http: ^1.2.0
-  
-
 
  
+  font_awesome_flutter: ^10.4.0 
+  http: ^1.2.2 
   intl:
   shared_preferences: ^2.3.4
   sqflite: ^2.3.0
