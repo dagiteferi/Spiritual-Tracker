@@ -64,8 +64,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
-                          builder: (context) =>
-                              RegisterPage()), // Go to RegisterPage
+                          builder: (context) => LoginPage(
+                                dataList: null,
+                              )),
                     );
                   },
                   child: Text('Skip'),
@@ -87,12 +88,11 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 TextButton(
                   onPressed: () {
                     if (_currentPage == 3) {
-                      // Last onboarding page
+                      // Navigate to LoginPage after onboarding
                       Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(
-                            builder: (context) =>
-                                RegisterPage()), // Go to RegisterPage
+                            builder: (context) => LoginPage(dataList: null)),
                       );
                     } else {
                       _pageController.nextPage(
