@@ -17,7 +17,7 @@ class RegisterPage extends StatelessWidget {
       String username, String password, BuildContext context) async {
     print("Attempting to register new user");
 
-    final String url =
+    const String url =
         "http://localhost:3000/user"; // Replace <your_local_ip> with your local IP
 
     try {
@@ -36,7 +36,7 @@ class RegisterPage extends StatelessWidget {
       if (response.statusCode == 201) {
         // Registration successful
         print("User registered successfully");
-        ScaffoldMessenger.of(context).showSnackBar(
+        ScaffoldMessenger.of(context).showSnackBar(  // show feedback messages 
           SnackBar(content: Text('User registered successfully')),
         );
         // Navigate to LoginPage after successful registration
@@ -135,7 +135,7 @@ class RegisterPage extends StatelessWidget {
                 _buildTextField(
                   controller: _passwordController,
                   label: 'Password',
-                  obscureText: true,
+                  obscureText: true, // hide the text input 
                   keyboardType: TextInputType.text,
                   icon: Icons.lock,
                 ),

@@ -9,305 +9,9 @@ import 'package:neh/constants/string_constants.dart';
 import 'package:neh/helper/userFunctions.dart';
 import 'package:neh/homepage/devotions/sermon/sermon.dart';
 import 'package:neh/models/personModel.dart';
-
-import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-// class ChurchEventsApp extends StatefulWidget {
-//   const ChurchEventsApp({super.key});
 
-//   @override
-//   _ChurchEventsAppState createState() => _ChurchEventsAppState();
-// }
-
-// class _ChurchEventsAppState extends State<ChurchEventsApp> {
-//   List<Map<String, String>> _submittedEvents = [];
-
-//   @override
-//   void initState() {
-//     super.initState();
-//     fetchEvents();
-//   }
-
-//   Future<void> fetchEvents() async {
-//     try {
-//       final events = await fetchEventsFromDatabase();
-//       setState(() {
-//         _submittedEvents = events;
-//       });
-//     } catch (e) {
-//       print("Error fetching events: $e");
-//     }
-//   }
-
-//   Future<void> addEvent(Map<String, String> eventData) async {
-//     await addEventToDatabase(eventData);
-//     await fetchEvents(); // Refresh the list after adding an event
-//   }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return MaterialApp(
-//       home: ChurchEventsPage(
-//         submittedEvents: _submittedEvents,
-//         addEvent: addEvent,
-//       ),
-//     );
-//   }
-// }
-
-// class ChurchEventsPage extends StatelessWidget {
-//   final List<Map<String, String>> submittedEvents;
-//   final Function(Map<String, String>) addEvent;
-
-//   const ChurchEventsPage(
-//       {super.key, required this.submittedEvents, required this.addEvent});
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(title: Text('Church Events')),
-//       body: Padding(
-//         padding: const EdgeInsets.all(16.0),
-//         child: Column(
-//           mainAxisAlignment: MainAxisAlignment.center,
-//           children: <Widget>[
-//             ElevatedButton(
-//               onPressed: () {
-//                 // Navigate to the RequestChurchEventForm page to add events
-//                 Navigator.push(
-//                   context,
-//                   MaterialPageRoute(
-//                     builder: (context) =>
-//                         RequestChurchEventForm(addEvent: addEvent),
-//                   ),
-//                 );
-//               },
-//               style: ElevatedButton.styleFrom(
-//                 backgroundColor: Colors.blueAccent, // Button background color
-//                 padding: EdgeInsets.symmetric(horizontal: 40, vertical: 15),
-//                 shape: RoundedRectangleBorder(
-//                     borderRadius: BorderRadius.circular(12)),
-//               ),
-//               child:
-//                   Text('Request Church Event', style: TextStyle(fontSize: 16)),
-//             ),
-//             SizedBox(height: 20.0),
-//             ElevatedButton(
-//               onPressed: () {
-//                 // Navigate to the SearchChurchEventsPage to view submitted events
-//                 print("Navigating to SearchChurchEventsPage");
-//                 print("Submitted Events: $submittedEvents");
-
-//                 Navigator.push(
-//                   context,
-//                   MaterialPageRoute(
-//                     builder: (context) => SearchChurchEventsPage(
-//                         submittedEvents: submittedEvents),
-//                   ),
-//                 );
-//               },
-//               style: ElevatedButton.styleFrom(
-//                 backgroundColor: Colors.green, // Button background color
-//                 padding: EdgeInsets.symmetric(horizontal: 40, vertical: 15),
-//                 shape: RoundedRectangleBorder(
-//                     borderRadius: BorderRadius.circular(12)),
-//               ),
-//               child:
-//                   Text('Search Church Events', style: TextStyle(fontSize: 16)),
-//             ),
-//           ],
-//         ),
-//       ),
-//     );
-//   }
-// }
-
-// class RequestChurchEventForm extends StatefulWidget {
-//   final Function(Map<String, String>) addEvent;
-
-//   const RequestChurchEventForm({super.key, required this.addEvent});
-
-//   @override
-//   _RequestChurchEventFormState createState() => _RequestChurchEventFormState();
-// }
-
-// class _RequestChurchEventFormState extends State<RequestChurchEventForm> {
-//   final _formKey = GlobalKey<FormState>();
-//   final TextEditingController _nameController = TextEditingController();
-//   final TextEditingController _churchNameController = TextEditingController();
-//   final TextEditingController _cityController = TextEditingController();
-//   final TextEditingController _addressController = TextEditingController();
-//   final TextEditingController _descriptionController = TextEditingController();
-
-//   ///////////////////////////
-//   ///
-//   ///
-//   ///
-//   ///
-//   ///  final TextEditingController _churchNameController = TextEditingController();
-//   final TextEditingController nameController = TextEditingController();
-//   final TextEditingController emailController = TextEditingController();
-//   final TextEditingController phoneController = TextEditingController();
-//   final TextEditingController passController = TextEditingController();
-
-//   void _submitForm() {
-//     if (_formKey.currentState!.validate()) {
-//       final eventData = {
-//         'Name': _nameController.text,
-//         'Church Name': _churchNameController.text,
-//         'City': _cityController.text,
-//         'Address': _addressController.text,
-//         'Description': _descriptionController.text,
-//       };
-
-//       widget.addEvent(eventData);
-
-//       // Show confirmation
-//       ScaffoldMessenger.of(context).showSnackBar(
-//         SnackBar(content: Text('Event Request Submitted')),
-//       );
-
-//       print("Event Submitted: $eventData");
-
-//       // Clear form
-//       _formKey.currentState!.reset();
-
-//       Navigator.pop(context);
-//     }
-//   }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(title: Text('Request Church Event')),
-//       body: Padding(
-//         padding: const EdgeInsets.all(16.0),
-//         child: Form(
-//           key: _formKey,
-//           child: SingleChildScrollView(
-//             child: Column(
-//               crossAxisAlignment: CrossAxisAlignment.stretch,
-//               children: <Widget>[
-//                 Container(
-//                   width: 510,
-//                   height: 60,
-//                   child: ElevatedButton(
-//                     onPressed: () async {
-//                       if (_formKey.currentState!.validate()) {
-//                         var personObject = Person(
-//                           nameController.text.toString(),
-//                           emailController.text.toString(),
-//                           phoneController.text,
-//                           passController.text.toString(),
-//                         );
-//                         await UserFunctions()
-//                             .registerUser(context, personObject);
-//                       }
-//                     },
-//                     child: Text(
-//                       StringConstants.signup,
-//                       style: TextStyle(color: Colors.black),
-//                     ),
-//                     style: ButtonStyle(
-//                         backgroundColor: MaterialStateProperty.all(
-//                             Color.fromRGBO(27, 213, 210, 10)),
-//                         shape:
-//                             MaterialStateProperty.all<RoundedRectangleBorder>(
-//                                 RoundedRectangleBorder(
-//                           borderRadius: BorderRadius.circular(80.0),
-//                         ))),
-//                   ),
-//                 ),
-//                 TextFormField(
-//                   controller: _nameController,
-//                   decoration: InputDecoration(
-//                     labelText: 'Your Name',
-//                     filled: true,
-//                     fillColor: Colors.lightBlue.shade50,
-//                     border: OutlineInputBorder(
-//                       borderRadius: BorderRadius.circular(12),
-//                     ),
-//                   ),
-//                   validator: (value) =>
-//                       value!.isEmpty ? 'Please enter your name' : null,
-//                 ),
-//                 SizedBox(height: 10.0),
-//                 TextFormField(
-//                   controller: _churchNameController,
-//                   decoration: InputDecoration(
-//                     labelText: 'Church Name',
-//                     filled: true,
-//                     fillColor: Colors.lightBlue.shade50,
-//                     border: OutlineInputBorder(
-//                       borderRadius: BorderRadius.circular(12),
-//                     ),
-//                   ),
-//                   validator: (value) =>
-//                       value!.isEmpty ? 'Please enter church name' : null,
-//                 ),
-//                 SizedBox(height: 10.0),
-//                 TextFormField(
-//                   controller: _cityController,
-//                   decoration: InputDecoration(
-//                     labelText: 'City',
-//                     filled: true,
-//                     fillColor: Colors.lightBlue.shade50,
-//                     border: OutlineInputBorder(
-//                       borderRadius: BorderRadius.circular(12),
-//                     ),
-//                   ),
-//                   validator: (value) =>
-//                       value!.isEmpty ? 'Please enter city' : null,
-//                 ),
-//                 SizedBox(height: 10.0),
-//                 TextFormField(
-//                   controller: _addressController,
-//                   decoration: InputDecoration(
-//                     labelText: 'Address',
-//                     filled: true,
-//                     fillColor: Colors.lightBlue.shade50,
-//                     border: OutlineInputBorder(
-//                       borderRadius: BorderRadius.circular(12),
-//                     ),
-//                   ),
-//                   validator: (value) =>
-//                       value!.isEmpty ? 'Please enter address' : null,
-//                 ),
-//                 SizedBox(height: 10.0),
-//                 TextFormField(
-//                   controller: _descriptionController,
-//                   decoration: InputDecoration(
-//                     labelText: 'Description',
-//                     filled: true,
-//                     fillColor: Colors.lightBlue.shade50,
-//                     border: OutlineInputBorder(
-//                       borderRadius: BorderRadius.circular(12),
-//                     ),
-//                   ),
-//                   maxLines: 4,
-//                   validator: (value) =>
-//                       value!.isEmpty ? 'Please enter description' : null,
-//                 ),
-//                 SizedBox(height: 20.0),
-//                 ElevatedButton(
-//                   onPressed: _submitForm,
-//                   style: ElevatedButton.styleFrom(
-//                     backgroundColor: Colors.blue, // Button color
-//                     padding: EdgeInsets.symmetric(horizontal: 40, vertical: 15),
-//                     shape: RoundedRectangleBorder(
-//                         borderRadius: BorderRadius.circular(12)),
-//                   ),
-//                   child: Text('Submit', style: TextStyle(fontSize: 16)),
-//                 ),
-//               ],
-//             ),
-//           ),
-//         ),
-//       ),
-//     );
-//   }
-// }
 
 class BibleVersesPage extends StatefulWidget {
   const BibleVersesPage({super.key});
@@ -318,7 +22,6 @@ class BibleVersesPage extends StatefulWidget {
 
 class _BibleVersesPageState extends State<BibleVersesPage> {
   List<String> bibleVerses = [
-    // Predefined list of Bible verses
     "John 3:16 - For God so loved the world that he gave his one and only Son, that whoever believes in him shall not perish but have eternal life.",
     "Psalm 23:1 - The Lord is my shepherd; I shall not want.",
     "Philippians 4:13 - I can do all things through Christ who strengthens me.",
@@ -326,26 +29,53 @@ class _BibleVersesPageState extends State<BibleVersesPage> {
     "Proverbs 3:5-6 - Trust in the Lord with all your heart and lean not on your own understanding; in all your ways submit to him, and he will make your paths straight.",
     "Isaiah 40:31 - But those who hope in the Lord will renew their strength. They will soar on wings like eagles.",
     "Matthew 11:28 - Come to me, all you who are weary and burdened, and I will give you rest."
+    "Nehemiah 2:20 - Then answered I them, and said unto them, The God of heaven, he will prosper us; therefore we his servants will arise and build: but ye have no portion, nor right, nor memorial, in Jerusalem.",
+    "Jeremiah 29:11 - For I know the plans I have for you, declares the Lord, plans for welfare and not for evil, to give you a future and a hope",
+    "Deuteronomy 31:6 - Be strong and courageous. Do not fear or be in dread of them, for it is the Lord your God who goes with you. He will not leave you or forsake you.",
+   "Isaiah 41:10 - Fear not, for I am with you; be not dismayed, for I am your God; I will strengthen you, I will help you, I will uphold you with my righteous right hand.",
+   "Psalm 34:8 - Oh, taste and see that the Lord is good! Blessed is the man who takes refuge in him!",
+   "Lamentations 3:22-23 - The steadfast love of the Lord never ceases; his mercies never come to an end; they are new every morning; great is your faithfulness.",
   ];
 
-  String todayVerse = ""; // Holds the verse of the day
+  String todayVerse = "";
+  List<String> filteredVerses = [];
+  final _searchController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
     setVerseOfTheDay();
+    filteredVerses = bibleVerses; // Initially show all verses
+    _searchController.addListener(() {
+      _filterVerses(_searchController.text);
+    });
+  }
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
   }
 
   void setVerseOfTheDay() {
-    // Get the current day of the year (1 - 365)
     int dayOfYear =
         DateTime.now().difference(DateTime(DateTime.now().year, 1, 1)).inDays;
-
-    // Get a verse based on the day of the year (cycling through verses)
     int verseIndex = dayOfYear % bibleVerses.length;
-
     setState(() {
       todayVerse = bibleVerses[verseIndex];
+    });
+  }
+
+  void _filterVerses(String query) {
+    setState(() {
+      if (query.isEmpty) {
+        filteredVerses = bibleVerses;
+      } else {
+        filteredVerses = bibleVerses
+            .where((verse) =>
+                verse.toLowerCase().contains(query.toLowerCase()))
+            .toList();
+      }
     });
   }
 
@@ -356,109 +86,77 @@ class _BibleVersesPageState extends State<BibleVersesPage> {
         title: Text('Bible Verse of the Day'),
       ),
       body: Container(
-        color: const Color.fromARGB(255, 255, 255,
-            255), // Set the background color of the page to white
+        color: Colors.white,
         child: Padding(
-          padding: const EdgeInsets.all(1.0),
+          padding: const EdgeInsets.all(16.0),
           child: Column(
-            mainAxisSize: MainAxisSize.min, // Keep content snug
-            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              // Upper Widget with a Blue Background
-
-              // Image at the top, fills the width
+              // Verse of the Day Section
               ClipRRect(
-                borderRadius:
-                    BorderRadius.circular(7.0), // Rounded corners for the image
+                borderRadius: BorderRadius.circular(7.0),
                 child: Image.asset(
-                  'assets/bible.jpg', // Path to your image in assets
-                  height: 160.0, // Adjust the height of the image
-                  width: double.infinity, // Make it fill the container's width
-                  fit: BoxFit.cover, // Ensures it covers the entire width
+                  'assets/bible.jpg',
+                  height: 160.0,
+                  width: double.infinity,
+                  fit: BoxFit.cover,
                 ),
               ),
-
-              SizedBox(height: 13.0), // Spacing between image and content
-              Icon(Icons.book, size: 48, color: Colors.black), // Icon in black
-              SizedBox(height: 15.0),
-              Text(
+              const SizedBox(height: 13.0),
+              const Icon(Icons.book, size: 48, color: Colors.black),
+              const SizedBox(height: 15.0),
+              const Text(
                 'Verse of the Day',
                 style: TextStyle(
                   fontSize: 22.0,
                   fontWeight: FontWeight.bold,
-                  color: Colors.black, // Title color set to black
+                  color: Colors.black,
                 ),
               ),
-              SizedBox(height: 20.0),
+              const SizedBox(height: 20.0),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16.0),
                 child: Text(
                   todayVerse,
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 18.0,
                     fontStyle: FontStyle.italic,
-                    color: Colors.black, // Text color set to black
+                    color: Colors.black,
                   ),
                   textAlign: TextAlign.center,
+                ),
+              ),
+              const SizedBox(height: 20.0),
+              const Divider(),
+              // Search Bar
+              TextField(
+                controller: _searchController,
+                decoration: InputDecoration(
+                  labelText: 'Search Bible Verses',
+                  prefixIcon: const Icon(Icons.search),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8.0),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 20.0),
+              // Display Filtered Verses
+              Expanded(
+                child: ListView.builder(
+                  itemCount: filteredVerses.length,
+                  itemBuilder: (context, index) {
+                    return ListTile(
+                      title: Text(
+                        filteredVerses[index],
+                        style: const TextStyle(fontSize: 16.0),
+                      ),
+                    );
+                  },
                 ),
               ),
             ],
           ),
         ),
       ),
-    );
-  }
-}
-
-class SearchChurchEventsPage extends StatelessWidget {
-  final List<Map<String, String>> submittedEvents;
-
-  const SearchChurchEventsPage({super.key, required this.submittedEvents});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text('Search Church Events')),
-      body: submittedEvents.isEmpty
-          ? Center(
-              child: Text(
-                'No events submitted yet.',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-              ),
-            )
-          : ListView.builder(
-              itemCount: submittedEvents.length,
-              itemBuilder: (context, index) {
-                final event = submittedEvents[index];
-                print("Displaying Event: $event");
-                return Card(
-                  elevation: 4.0,
-                  margin: EdgeInsets.all(10.0),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: ListTile(
-                      title: Text(
-                        event['Church Name'] ?? '',
-                        style: TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.bold),
-                      ),
-                      subtitle: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text('City: ${event['City'] ?? ''}'),
-                          Text('Address: ${event['Address'] ?? ''}'),
-                          Text('Description: ${event['Description'] ?? ''}'),
-                        ],
-                      ),
-                      isThreeLine: true,
-                    ),
-                  ),
-                );
-              },
-            ),
     );
   }
 }
@@ -704,169 +402,7 @@ class _Sermon1DetailPageState extends State<Sermon1DetailPage> {
   }
 }
 
-// class Sermon2DetailPage extends StatefulWidget {
-//   Sermon2DetailPage({super.key});
 
-//   @override
-//   State<Sermon2DetailPage> createState() => _Sermon2DetailPageState();
-// }
-
-// class _Sermon2DetailPageState extends State<Sermon2DetailPage> {
-//   late AudioPlayer player = AudioPlayer();
-
-//   @override
-//   void initState() {
-//     super.initState();
-
-//     // Initialize the audio player
-//     player = AudioPlayer();
-
-//     // Set the release mode to keep the source after playback
-//     player.setReleaseMode(ReleaseMode.stop);
-
-//     // Start the player as soon as the app is displayed
-//     WidgetsBinding.instance.addPostFrameCallback((_) async {
-//       await player.setSource(AssetSource('k.mp3'));
-//       await player.resume();
-//     });
-//   }
-
-//   @override
-//   void dispose() {
-//     // Release all sources and dispose the player
-//     player.dispose();
-
-//     super.dispose();
-//   }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//         title: Text('Faithful Servant'),
-//         backgroundColor: const Color.fromARGB(255, 122, 115, 115),
-//       ),
-//       body: Container(
-//         color: const Color.fromARGB(255, 77, 68, 68),
-//         padding: const EdgeInsets.all(16.0),
-//         child: SingleChildScrollView(
-//           child: Column(
-//             crossAxisAlignment: CrossAxisAlignment.start,
-//             children: [
-//               // Date
-//               Text(
-//                 '📖 14 December 2024',
-//                 style: TextStyle(
-//                   fontSize: 14.0,
-//                   color: const Color.fromARGB(255, 137, 132, 132),
-//                 ),
-//               ),
-//               SizedBox(height: 5.0),
-//               Text(
-//                 'Faithful Servant',
-//                 style: TextStyle(
-//                   fontSize: 22.0,
-//                   fontWeight: FontWeight.bold,
-//                   color: Colors.white,
-//                 ),
-//               ),
-//               SizedBox(height: 4.0),
-//               Text(
-//                 'Pastor: Samuel Tesfaye',
-//                 style: TextStyle(
-//                   fontSize: 16.0,
-//                   color: const Color.fromARGB(255, 200, 186, 186),
-//                 ),
-//               ),
-//               SizedBox(height: 20.0),
-//               Text(
-//                 '“Well done, good and faithful servant!”',
-//                 style: TextStyle(
-//                   fontSize: 16.0,
-//                   fontStyle: FontStyle.italic,
-//                   color: Colors.white,
-//                 ),
-//               ),
-
-//               // Bible verse reference
-//               Text(
-//                 'Matthew 25:23',
-//                 style: TextStyle(
-//                   fontSize: 14.0,
-//                   fontStyle: FontStyle.italic,
-//                   color: const Color.fromARGB(255, 217, 208, 208),
-//                 ),
-//               ),
-
-//               // Divider
-//               Divider(
-//                 color: Colors.white,
-//                 thickness: 1.0,
-//                 height: 30.0,
-//               ),
-
-//               // Sermon content
-//               _buildSermonContent(),
-//             ],
-//           ),
-//         ),
-//       ),
-//     );
-//   }
-
-//   Widget _buildSermonContent() {
-//     return Column(
-//       crossAxisAlignment: CrossAxisAlignment.start,
-//       children: [
-//         PlayerWidget(player: player),
-//         Text(
-//           'The parable of the talents in Matthew 25 teaches us about stewardship and faithfulness. '
-//           'Jesus told the story of a master who entrusted his servants with his property, giving '
-//           'them varying amounts of talents according to their ability. Two servants invested and doubled '
-//           'their talents, while one buried his talent out of fear.',
-//           style: TextStyle(
-//             fontSize: 16.0,
-//             color: Colors.white,
-//             height: 1.6,
-//           ),
-//         ),
-//         SizedBox(height: 15.0),
-//         Text(
-//           'The master praised the diligent servants, saying, "Well done, good and faithful servant! You have been '
-//           'faithful with a few things; I will put you in charge of many things. Come and share your master’s happiness." '
-//           'This parable reminds us that God has entrusted each of us with unique gifts and opportunities. Our faithfulness '
-//           'in using them reflects our commitment to Him.',
-//           style: TextStyle(
-//             fontSize: 16.0,
-//             color: Colors.white,
-//             height: 1.6,
-//           ),
-//         ),
-//         SizedBox(height: 15.0),
-//         Text(
-//           'Faithfulness is not about the size of our accomplishments but about our obedience and trust in God. '
-//           'When we serve Him with our whole heart, He promises eternal rewards far greater than what we can imagine.',
-//           style: TextStyle(
-//             fontSize: 16.0,
-//             color: Colors.white,
-//             height: 1.6,
-//           ),
-//         ),
-//         SizedBox(height: 15.0),
-//         Text(
-//           'As we reflect on this message, let us examine how we are stewarding what God has entrusted to us. Are we '
-//           'living faithfully, seeking His guidance in all things? May we be inspired to hear those precious words one day: '
-//           '“Well done, good and faithful servant.”',
-//           style: TextStyle(
-//             fontSize: 16.0,
-//             color: Colors.white,
-//             height: 1.6,
-//           ),
-//         ),
-//       ],
-//     );
-//   }
-// }
 class PlayerWidget extends StatefulWidget {
   final AudioPlayer player;
 

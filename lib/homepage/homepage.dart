@@ -6,211 +6,355 @@ import 'package:neh/homepage/devotions/sermon/sermon.dart';
 import 'package:neh/homepage/prayer%20request/prayer%20request.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-//import 'church_calendar_page.dart';
-import 'package:flutter/material.dart';
+import 'searchvoice.dart'; // Import your voice search page
 
-class HomePage extends StatelessWidget {
+
+class HomePage extends StatefulWidget {
   const HomePage({super.key});
+
+  @override
+  _HomePageState createState() => _HomePageState();
+}
+
+
+class _HomePageState extends State<HomePage> {
+  TextEditingController _searchController = TextEditingController();
+  bool _isSearching = false;
+
+  // Sample data list for search (you can customize this with more data)
+  List<HoverWidgetData> allItems = [
+    HoverWidgetData(
+      title: 'Bible Verses',
+    //  icon: Icons.book,
+      image: 'assets/download.jpg',
+      description: 'Read Bible verses daily and stay spiritually uplifted.',
+      
+    ),
+    HoverWidgetData(
+      title: 'Prayer Requests',
+    //  icon: Icons.request_page,
+      image: 'assets/papic.jpg',
+      description: 'Submit prayer requests and pray with the community.',
+      
+    ),
+    HoverWidgetData(
+      title: 'Church Calendar',
+     // icon: Icons.calendar_today,
+      image: 'assets/cal.jpeg',
+      description: 'Stay updated with church events and activities.',
+    ),
+    HoverWidgetData(
+      title: 'Sermons',
+     // icon: Icons.headset,
+      image: 'assets/pa.jpg',
+      description: 'Listen to inspiring sermons from church leaders.',
+    ),
+  ];
+
+  List<HoverWidgetData> filteredItems = [];
+
+  @override
+  void initState() {
+    super.initState();
+    // Initially, display all items
+    filteredItems = allItems;
+  }
+
+  void _filterSearchResults(String query) {
+    List<HoverWidgetData> dummySearchList = [];
+    dummySearchList.addAll(allItems);
+    if (query.isNotEmpty) {
+      List<HoverWidgetData> dummyListData = [];
+      dummySearchList.forEach((item) {
+        if (item.title.toLowerCase().contains(query.toLowerCase()) ||
+            item.description.toLowerCase().contains(query.toLowerCase())) {
+          dummyListData.add(item);
+        }
+      });
+      setState(() {
+        filteredItems = dummyListData;
+      });
+    } else {
+      setState(() {
+        filteredItems = allItems;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(title: Text('Spiritual Tracker')),
-        drawer: Drawer(
-          child: ListView(
-            padding: EdgeInsets.zero,
-            children: [
-              DrawerHeader(
-                decoration: BoxDecoration(
-                  color: Colors.blue,
-                ),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: const [
-                    CircleAvatar(
-                      radius: 40.0,
-                      backgroundImage:
-                          AssetImage('assets/wel.jpg'), // Add user image
-                    ),
-                    SizedBox(height: 10.0),
-                    Text(
-                      'Welcome,',
-                      style: TextStyle(color: Colors.white, fontSize: 18.0),
-                    ),
-                  ],
-                ),
+      appBar: AppBar(
+        title: _isSearching
+            ? TextField(
+                controller: _searchController,
+                decoration: InputDecoration(hintText: "Search..."),
+                style: TextStyle(color: const Color.fromARGB(255, 0, 0, 0)),
+                autofocus: true,
+                onChanged: _filterSearchResults,
+              )
+            : Text('Spiritual Tracker'),
+        actions: [
+          IconButton(
+            icon: Icon(_isSearching ? Icons.cancel : Icons.search),
+            onPressed: () {
+              setState(() {
+                if (_isSearching) {
+                  _searchController.clear();
+                }
+                _isSearching = !_isSearching;
+                filteredItems = allItems; // Reset the filtered items
+              });
+            },
+          ),
+        ],
+      ),
+      drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: [
+            DrawerHeader(
+              decoration: BoxDecoration(color: Colors.blue),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: const [
+                  CircleAvatar(
+                    radius: 40.0,
+                    backgroundImage: AssetImage('assets/wel.jpg'),
+                  ),
+                  SizedBox(height: 10.0),
+                  Text('Welcome,', style: TextStyle(color: Colors.white, fontSize: 18.0)),
+                ],
+             
               ),
-              ListTile(
-                leading: Icon(Icons.account_circle),
-                title: Text('Account'),
-                onTap: () {
-                  Navigator.push(
+            ),
+            ListTile(
+              leading: Icon(Icons.account_circle),
+              title: Text('Account'),
+              onTap: () {
+                 Navigator.push(
                     context,
                     MaterialPageRoute(
                       builder: (context) => const AccountPage(),
-                    ),
+                       ),
                   );
                 },
               ),
-              ListTile(
-                leading: Icon(Icons.contact_mail),
-                title: Text('Contact Us'),
-                onTap: () {
+                // Handle navigation to Account Page
+              
+            
+            ListTile(
+              leading: Icon(Icons.contact_mail),
+              title: Text('Contact Us'),
+              onTap: () {
                   Navigator.push(
                     context,
                     MaterialPageRoute(builder: (context) => ContactUsPage()),
                   );
                 },
               ),
-              ListTile(
-                leading: Icon(Icons.feedback),
-                title: Text('Share Feedback'),
-                onTap: () {
-                  Navigator.push(
+                // Handle navigation to Contact Us Page
+              
+        
+            ListTile(
+              leading: Icon(Icons.feedback),
+              title: Text('Share Feedback'),
+              onTap: () {
+                   Navigator.push(
                     context,
                     MaterialPageRoute(
                         builder: (context) => ShareFeedbackPage()),
                   );
-                },
-              ),
-              ListTile(
-                leading: Icon(Icons.info),
-                title: Text('About Us'),
-                onTap: () {
-                  Navigator.push(
+                // Handle navigation to Share Feedback Page
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.info),
+              title: Text('About Us'),
+              onTap: () {
+  Navigator.push(
                     context,
                     MaterialPageRoute(
                         builder: (context) => const AboutUsPage()),
                   );
-                },
-              ),
-              // Church Calendar Navigation
+                // Handle navigation to About Us Page
+              },
+            ),
+            // Church Calendar Navigation
               ListTile(
-                leading: Icon(Icons.calendar_today),
-                title: Text('Church Calendar'),
-                onTap: () {
-                  Navigator.push(
+              leading: Icon(Icons.info),
+              title: Text('SearchVoice'),
+              onTap: () {
+  Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => const ChurchCalendarPage()),
+                        builder: (context) => SearchVoice()),
                   );
-                },
-              ),
-            ],
-          ),
+                // Handle navigation to About Us Page
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.calendar_today),
+              title: Text('Church Calendar'),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) =>  ChurchCalendarPage()),
+                );
+              },
+            ),
+          ],
         ),
-        body: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: ListView(
-            children: <Widget>[
-              _buildSmallWidget(
-                context,
-                title: 'Bible Verses',
-                icon: Icons.book,
-                image: 'assets/download.jpg',
-              ),
-              SizedBox(height: 15),
-              _buildSmallWidget(
-                context,
-                title: 'Prayer Requests',
-                icon: Icons.request_page,
-                image: 'assets/papic.jpg',
-              ),
-              SizedBox(height: 10),
-              _buildSmallWidget(
-                context,
-                title: 'Church Calendar',
-                icon: Icons.calendar_today,
-                image: 'assets/cal.jpeg',
-              ),
-              SizedBox(height: 10),
-              _buildSmallWidget(
-                context,
-                title: 'Sermons',
-                icon: Icons.headset,
-                image: 'assets/pa.jpg',
-              ),
-            ],
-          ),
-        ));
-  }
-
-  Widget _buildSmallWidget(BuildContext context,
-      {required String title, required IconData icon, required String image}) {
-    return SizedBox(
-      width: double.infinity,
-      height: 95,
-      child: Card(
-        elevation: 4.0,
-        shape:
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
-        child: InkWell(
-          onTap: () {
-            if (title == 'Bible Verses') {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => BibleVersesPage()),
-              );
-            } else if (title == 'Sermons') {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => SermonListPage()),
-              );
-            } else if (title == 'Prayer Requests') {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => PrayerRequestPage()),
-              );
-            } else if (title == 'Church Calendar') {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => ChurchCalendarPage()),
-              );
-            } else {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text('$title tapped')),
-              );
-            }
+      ),
+        
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: ListView.builder(
+          itemCount: filteredItems.length,
+          itemBuilder: (context, index) {
+            var item = filteredItems[index];
+            return HoverWidget(
+              title: item.title,
+             // icon: item.icon,
+              image: item.image,
+              description: item.description,
+               onTap: () {
+        // Navigate to the respective page
+        if (item.title == 'Bible Verses') {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const BibleVersesPage()),
+          );
+           } else if (item.title == 'Prayer Requests') {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const PrayerRequestPage()),
+          );
+        } else if (item.title == 'Church Calendar') {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const ChurchCalendarPage()),
+          );
+        } else if (item.title == 'Sermons') {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => SermonListPage()),
+          );
+        }
+      },
+            );
           },
-          child: Stack(
-            fit: StackFit.expand,
-            children: <Widget>[
-              Container(
-                decoration: BoxDecoration(
-                  image: DecorationImage(
-                    image: AssetImage(image),
-                    fit: BoxFit.cover,
-                  ),
-                  borderRadius: BorderRadius.circular(10.0),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Icon(icon, size: 0.0, color: Colors.white),
-                    SizedBox(height: 5.0),
-                    Text(
-                      title,
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: 15.0,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
         ),
       ),
     );
   }
 }
+class HoverWidgetData {
+  final String title;
+  final String image;
+  final String description;
 
+  HoverWidgetData({
+    required this.title,
+    required this.image,
+    required this.description,
+  });
+}
+class HoverWidget extends StatefulWidget {
+  final String title;
+  final String image;
+  final String description;
+   final VoidCallback onTap; // Add this
+
+  const HoverWidget({
+    Key? key,
+    required this.title,
+    required this.image,
+    required this.description,
+      required this.onTap, // Add this
+  }) : super(key: key);
+
+  @override
+  _HoverWidgetState createState() => _HoverWidgetState();
+}
+
+class _HoverWidgetState extends State<HoverWidget> {
+  bool _isHovered = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return MouseRegion(
+      onEnter: (_) => setState(() => _isHovered = true),
+      onExit: (_) => setState(() => _isHovered = false),
+        child: GestureDetector(
+        onTap: widget.onTap, // Handle tap here
+      child: SizedBox(
+        width: double.infinity,
+        height: 150,
+        child: Card(
+          elevation: 4.0,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+          child: Stack(
+            fit: StackFit.expand,
+            children: <Widget>[
+              // Background Image
+              Container(
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    image: AssetImage(widget.image),
+                    fit: BoxFit.cover,
+                  ),
+                  borderRadius: BorderRadius.circular(10.0),
+                ),
+          ),
+          
+
+          // Hover overlay with text
+              AnimatedOpacity(
+                opacity: _isHovered ? 1.0 : 0.0,
+                duration: const Duration(milliseconds: 300),
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.black.withOpacity(0.6),
+                    borderRadius: BorderRadius.circular(10.0),
+                  ),
+                  child: Center(
+                    child: Text(
+                      widget.description,
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 16.0,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              // Title
+              if (!_isHovered)
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Center(
+                    child: Text(
+                      widget.title,
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(
+                        fontSize: 18.0,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ),
+            ],
+          ),
+        ),
+      ),
+        )
+    );
+  }
+}
 class AccountPage extends StatefulWidget {
   const AccountPage({super.key});
   @override

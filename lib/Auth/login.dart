@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:neh/Auth/register.dart';
 import 'package:neh/Auth/user_model.dart';
 import 'package:http/http.dart' as http;
 import 'package:neh/homepage/homepage.dart';
@@ -22,6 +23,7 @@ class LoginPage extends StatelessWidget {
 
     final response = await http.post(
       Uri.parse("http://localhost:3000/user"),
+      
       body: jsonEncode({
         'username': username,
         'pass': password,
@@ -146,19 +148,35 @@ class LoginPage extends StatelessWidget {
                   child: Text('Login'),
                 ),
                 SizedBox(height: 16.0),
-                ElevatedButton(
+                TextButton(
                   onPressed: () {
-                    // Register new user and clear the form on success
-                    register(
-                      _usernameController.text,
-                      _passwordController.text,
+                    // Navigate to RegisterPage when clicked
+                    Navigator.push(
                       context,
-                      _usernameController,
-                      _passwordController,
+                      MaterialPageRoute(builder: (context) => RegisterPage()),
                     );
                   },
-                  child: Text('Register'),
+                  child: Text(
+                    "Don't have an account? Register",
+                    style: TextStyle(
+                        color: const Color.fromARGB(255, 21, 41, 226)),
+                  ),
                 ),
+                // SizedBox(height: 16.0),
+                // ElevatedButton(
+                //   onPressed: () {
+                //     // Register new user and clear the form on success
+                //     register(
+
+                //       _usernameController.text,
+                //       _passwordController.text,
+                //       context,
+                //       _usernameController,
+                //       _passwordController,
+                //     );
+                //   },
+                //   child: Text('Register'),
+                // ),
               ],
             ),
           ),

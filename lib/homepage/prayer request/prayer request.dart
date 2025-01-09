@@ -22,57 +22,62 @@ class _PrayerRequestPageState extends State<PrayerRequestPage> {
     _requestController.dispose();
     super.dispose();
   }
+Future<void> _submitRequest() async {
+  if (_formKey.currentState!.validate()) {
+    final name = _nameController.text.isEmpty ? "Anonymous" : _nameController.text;
+    final request = _requestController.text;
 
-  Future<void> _submitRequest() async {
-    if (_formKey.currentState!.validate()) {
-      final name = _nameController.text;
-      final request = _requestController.text;
+    // Prepare data to send to PHP backend
+    final data = {
+      'name': name,
+      'request': request,
+    };
 
-      // Call PHP script to submit the prayer request
-      final response = await http.post(
-        Uri.parse(
-            'http://localhost/prayer_api/request_event.php'), // Change URL if necessary
-        body: {
-          'name': name,
-          'request': request,
-        },
-      );
+    // Send the prayer request to the backend via POST
+    final response = await http.post(
+      Uri.parse('http://localhost/prayer_api/request_event.php'), // Change URL if necessary
+      headers: {'Content-Type': 'application/json'},
+      body: json.encode(data),
+    );
 
-      if (response.statusCode == 200) {
-        // Parse response to check if submission was successful
-        final result = json.decode(response.body);
-        if (result['success'] == true) {
-          // If submission is successful, navigate to PrayerRequestsListPage and include new request
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => PrayerRequestsListPage(
-                newRequest: {
-                  'name': name,
-                  'request': request,
-                  'created_at':
-                      DateTime.now().toIso8601String(), // Simulate "created_at"
-                },
-              ),
+    if (response.statusCode == 200) {
+      final result = json.decode(response.body);
+      if (result['success'] == true) {
+        // If successful, navigate to the Prayer Requests List page
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => PrayerRequestsListPage(
+              newRequest: {
+                'name': name,
+                'request': request,
+                'created_at': DateTime.now().toIso8601String(),
+              },
             ),
-          );
-        } else {
-          // Handle submission error
-          print('Error: ${result['error']}');
-        }
+          ),
+        );
       } else {
-        // Handle HTTP error
-        print('Error: ${response.body}');
+        // Show error message if not successful
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to save request: ${result['error']}')),
+        );
       }
+    } else {
+      // Handle network errors or bad responses
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error: Unable to connect to server')),
+      );
     }
   }
+}
+
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Prayer Request'),
-        backgroundColor: Colors.blueAccent,
+        title: const Text('Prayer Request',style: TextStyle(color: Colors.white)),
+        backgroundColor: const Color.fromARGB(255, 88, 81, 81),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
@@ -85,7 +90,7 @@ class _PrayerRequestPageState extends State<PrayerRequestPage> {
               alignment: Alignment.center,
               padding: const EdgeInsets.all(16.0),
               decoration: BoxDecoration(
-                color: Colors.blueAccent,
+                color: const Color.fromARGB(255, 81, 82, 84),
                 borderRadius: BorderRadius.circular(12.0),
               ),
               child: const Text(
@@ -145,7 +150,7 @@ class _PrayerRequestPageState extends State<PrayerRequestPage> {
                     onPressed: _submitRequest,
                     style: ElevatedButton.styleFrom(
                       padding: const EdgeInsets.symmetric(vertical: 16.0),
-                      backgroundColor: Colors.blueAccent,
+                      backgroundColor: const Color.fromARGB(255, 77, 77, 78),
                     ),
                     child: const Text(
                       'Submit Prayer Request',
@@ -221,14 +226,14 @@ class SearchForPrayerRequests extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            const Icon(Icons.search, color: Colors.blueAccent),
+            const Icon(Icons.search, color: Color.fromARGB(255, 82, 83, 85)),
             const SizedBox(width: 8),
             const Text(
               'Search for Prayer Requests',
               style: TextStyle(
                 fontSize: 20.0,
                 fontWeight: FontWeight.bold,
-                color: Colors.blueAccent,
+                color: Color.fromARGB(255, 73, 76, 80),
               ),
             ),
           ],
@@ -237,8 +242,6 @@ class SearchForPrayerRequests extends StatelessWidget {
     );
   }
 }
-
-// Updated Prayer Requests List Page to Handle New Request
 class PrayerRequestsListPage extends StatefulWidget {
   final Map<String, dynamic>? newRequest; // To handle the new request
 
@@ -250,32 +253,60 @@ class PrayerRequestsListPage extends StatefulWidget {
 
 class _PrayerRequestsListPageState extends State<PrayerRequestsListPage> {
   List<dynamic> _prayerRequests = [];
+  List<dynamic> _filteredRequests = [];
+  final _searchController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
     _fetchPrayerRequests();
+
+    // Set up listener for search bar input
+    _searchController.addListener(() {
+      _filterRequests(_searchController.text);
+    });
+  }
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
   }
 
   Future<void> _fetchPrayerRequests() async {
     final response = await http.get(
-      Uri.parse(
-          'http://localhost/prayer_api/search_events.php'), // Change URL if necessary
+      Uri.parse('http://localhost/prayer_api/search_events.php'), // Change URL if necessary
     );
 
     if (response.statusCode == 200) {
       setState(() {
         _prayerRequests = json.decode(response.body);
+        _filteredRequests = _prayerRequests; // Initially show all requests
 
         if (widget.newRequest != null) {
           // Add the new request into the list if it's provided
           _prayerRequests.insert(0, widget.newRequest);
+          _filteredRequests = _prayerRequests; // Update the filtered list as well
         }
       });
     } else {
       // Handle error
       print('Error: ${response.body}');
     }
+  }
+
+  void _filterRequests(String query) {
+    setState(() {
+      if (query.isEmpty) {
+        _filteredRequests = _prayerRequests;
+      } else {
+        _filteredRequests = _prayerRequests
+            .where((request) =>
+                (request['name'] ?? 'Anonymous').toLowerCase().contains(query.toLowerCase()) ||
+                request['request'].toLowerCase().contains(query.toLowerCase()))
+            .toList();
+      }
+    });
   }
 
   @override
@@ -287,84 +318,36 @@ class _PrayerRequestsListPageState extends State<PrayerRequestsListPage> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: _prayerRequests.isEmpty
-            ? const Center(child: CircularProgressIndicator())
-            : ListView.builder(
-                itemCount: _prayerRequests.length,
-                itemBuilder: (context, index) {
-                  final request = _prayerRequests[index];
-                  return Card(
-                    margin: const EdgeInsets.symmetric(vertical: 8.0),
-                    child: ListTile(
-                      title: Text(request['name'] ?? 'Anonymous'),
-                      subtitle: Text(request['request']),
-                      trailing: Text(request['created_at']),
-                    ),
-                  );
-                },
-              ),
-      ),
-    );
-  }
-}
-
-class PrayerRequestDetailsPage extends StatelessWidget {
-  final String name;
-  final String request;
-
-  const PrayerRequestDetailsPage({
-    super.key,
-    required this.name,
-    required this.request,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Prayer Request Details'),
-        backgroundColor: Colors.blueAccent,
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Text(
-              'Thank you for your submission!',
-              style: const TextStyle(
-                fontSize: 24.0,
-                fontWeight: FontWeight.bold,
-                color: Colors.blueAccent,
+          children: [
+            TextField(
+              controller: _searchController,
+              decoration: InputDecoration(
+                labelText: 'Search Prayer Requests',
+                prefixIcon: const Icon(Icons.search),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8.0),
+                ),
               ),
             ),
             const SizedBox(height: 20),
-            Text(
-              'Name: ${name.isEmpty ? 'Anonymous' : name}',
-              style: const TextStyle(fontSize: 18.0),
-            ),
-            const SizedBox(height: 10),
-            const Text(
-              'Prayer Request:',
-              style: TextStyle(
-                fontSize: 18.0,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(height: 10),
-            Text(
-              request,
-              style: const TextStyle(fontSize: 16.0),
-            ),
-            const SizedBox(height: 30),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.blueAccent,
-              ),
-              child: const Text('Back to Prayer Requests'),
+            Expanded(
+              child: _filteredRequests.isEmpty
+                  ? const Center(child: CircularProgressIndicator())
+                  : ListView.builder(
+                      itemCount: _filteredRequests.length,
+                      itemBuilder: (context, index) {
+                        final request = _filteredRequests[index];
+                        return Card(
+                          margin: const EdgeInsets.symmetric(vertical: 8.0),
+                          child: ListTile(
+                            title: Text(request['name'] ?? 'Anonymous'),
+                            subtitle: Text(request['request']),
+                            trailing: Text(request['created_at']),
+                          ),
+                        );
+                      },
+                    ),
             ),
           ],
         ),
