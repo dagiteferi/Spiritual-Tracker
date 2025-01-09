@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:neh/Auth/login.dart';
@@ -45,55 +44,61 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 fit: BoxFit.cover, // Ensures the image fits within the widget bounds
               ),
             ),
-          ),
-          Expanded(
-            child: PageView.builder(
-              itemCount: pageViewList.length,
-              controller: _pageController,
-              onPageChanged: (int page) {
-                setState(() {
-                  _currentPage = page;
-                });
-              },
-              itemBuilder: (context, index) {
-                return OnboardingCard(
-                  onBoardingList: pageViewList,
-                  currentIndex: index,
-                  pageController: _pageController,
-                );
-              },
-            ),
-          ),
-        ],
-      ),
-      bottomSheet: Padding(
-        padding: const EdgeInsets.only(top: 65, left: 32, right: 32, bottom: 57),
-        child: PrimaryButton(
-          onTap: () {
-            if (_currentPage == pageViewList.length - 1) {
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(builder: (context) => LoginPage(dataList: null)),
-              );
-            } else {
-              _pageController.nextPage(
-                duration: const Duration(milliseconds: 500),
-                curve: Curves.fastOutSlowIn,
-              );
-            }
-          },
-          text: _currentPage == pageViewList.length - 1 ? 'Get Started' : 'Continue',
-          bgColor: AppColor.kPrimary,
-          borderRadius: 8,
-          height: 48,
-          width: 326,
-          textColor: AppColor.kWhiteColor,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                TextButton(
+                  onPressed: () {
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => LoginPage(
+                                dataList: null,
+                              )),
+                    );
+                  },
+                  child: Text('Skip'),
+                ),
+                Row(
+                  children: List.generate(4, (index) {
+                    return Container(
+                      margin: EdgeInsets.symmetric(horizontal: 5.0),
+                      width: _currentPage == index ? 12.0 : 8.0,
+                      height: _currentPage == index ? 12.0 : 8.0,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color:
+                            _currentPage == index ? Colors.blue : Colors.grey,
+                      ),
+                    );
+                  }),
+                ),
+                TextButton(
+                  onPressed: () {
+                    if (_currentPage == 3) {
+                      // Navigate to LoginPage after onboarding
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => LoginPage(dataList: null)),
+                      );
+                    } else {
+                      _pageController.nextPage(
+                        duration: Duration(milliseconds: 300),
+                        curve: Curves.ease,
+                      );
+                    }
+                  },
+                  child: Text('Next'),
+                ),
+              ],
+            )
+          ],
         ),
       ),
     );
   }
 }
-
 
 class PrimaryButton extends StatefulWidget {
   final VoidCallback onTap;
@@ -269,7 +274,6 @@ class OnBoarding {
     required this.image,
   });
 }
-
 
 List<OnBoarding> pageViewList = [
   OnBoarding(
