@@ -4,7 +4,7 @@ import 'package:neh/Auth/login.dart';
 import 'package:neh/Auth/register.dart'; // Import RegisterPage
 import 'package:dots_indicator/dots_indicator.dart';
 
-// Define your custom colors and image paths
+
 class AppImagePath {
   static String kOnboarding1 = 'assets/logoo.jpg';
   static String kOnboarding2 = 'assets/logoo.jpg';
